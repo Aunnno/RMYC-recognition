@@ -11,14 +11,14 @@ class CameraCapture:
         self.video_writer = None
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
-    def camera_init(self):
+    def camera_init(self): #摄像头初始化
         try:
             self.cap=cv2.VideoCapture(self.camera_index)
             if not self.cap.isOpened():
                 print("无法打开摄像头")
                 return False
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
             self.cap.set(cv2.CAP_PROP_FPS, 30)
             print("摄像头初始化成功")
             self.is_running = True
@@ -26,7 +26,7 @@ class CameraCapture:
         except Exception as e:
             print(f"初始化失败:{e}")
             return False
-    def capture_photo(self):
+    def capture_photo(self): #拍照
         try: 
             ret, frame = self.cap.read()
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -45,7 +45,7 @@ class CameraCapture:
         except Exception as e:
             print(f"拍照时出现错误:{e}")
             return False
-    def start_record(self,frame_width,frame_height,fps):
+    def start_record(self,frame_width,frame_height,fps): #开始录像
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"video_{timestamp}.mp4"
@@ -62,7 +62,7 @@ class CameraCapture:
         except Exception as e:
             print(f"录制时出现错误{e}")
             return False
-    def stop_record(self):
+    def stop_record(self): #结束录像
         if self.video_writer is not None and self.is_recording:
             self.video_writer.release()
             self.is_recording = False
@@ -71,10 +71,10 @@ class CameraCapture:
         else:
             print("未发现录制进程")
 
-    def write_frame(self,frame):
-        if self.video_writer != None and self.is_recording:
+    def write_frame(self,frame): #写入帧
+        if self.video_writer is not None and self.is_recording:
             self.video_writer.write(frame)
-    def preview(self):
+    def preview(self): #预览
         print("c拍照,r开始/停止录制,q退出")
         if not self.camera_init():
             return
@@ -106,7 +106,7 @@ class CameraCapture:
             print(f"录制时出现错误:{e}")
         finally:
             self.clean_up()
-    def clean_up(self):
+    def clean_up(self): #清理
         if self.is_recording:
             self.stop_record()
         self.is_running = False
