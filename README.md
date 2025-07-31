@@ -12,7 +12,7 @@
 * `ultralytics`包含机器学习相关框架  
 * `opencv-python`用于视觉处理  
 **注意!!!**  
-`ultralytics`库中包含依赖`Pytorch`(由`torch`,`torchvision`,`torchaudio`组成)，此为跑深度学习的关键，必须根据你所使用的设备来安装相关版本，比如我的树莓派是aarch64架构，就得安装适用于aarch的pytorch，我的电脑GPU是3070laptop，是n卡且安装了CUDA所以必须安装适用于CUDA的pytorch  
+`ultralytics`库中包含依赖`Pytorch`(由`torch`,`torchvision`,`torchaudio`组成)，此为跑深度学习的关键，必须根据你所使用的设备来安装相关版本，比如我的树莓派是aarch64架构，就得安装适用于aarch64的pytorch，我的电脑GPU是3070laptop，是n卡且安装了CUDA，所以必须安装适用于CUDA的pytorch  
 建议安装完Pytorch后再安装ultralytics，不然安装ultralytics的时候会自动安装Pytorch，但是有概率不适用于你的设备  
 **请自行前往Pytorch官网上查询对应设备的安装命令!!!**  
 安装好Pytorch后，就要安装ultralytics和opencv了  
