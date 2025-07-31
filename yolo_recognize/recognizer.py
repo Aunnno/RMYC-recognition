@@ -3,16 +3,16 @@ import cv2
 import os
 class recognizer:
     def __init__(self) -> None:
-        self.photos_path = "photos/YOUR_PHOTO" #图片路径
-        self.model_path = "model/YOUR_MODEL" #模型路径
+        self.photos_path = "photos" #图片路径
+        self.model_path = "model" #模型路径
         self.cap_running = False
         self.model_running = False
         self.conf = 0.7 #置信度阈值
         self.iou = 0.7 #非极大值抑制
         if not os.path.exists(self.photos_path): #照片路径检测
-            print("照片路径无效")
+            os.makedirs(self.photos_path)
         if not os.path.exists(self.model_path): #模型路径检测
-            print("模型路径无效")
+            os.makedirs(self.model_path)
     def camera_init(self) -> bool: #摄像头初始化
         try:
             self.cap = cv2.VideoCapture(0)
@@ -30,8 +30,13 @@ class recognizer:
             print(f"摄像头打开出错:{e}")
             return False
     def model_init(self) -> bool: #模型初始化
+        print("输入模型名:")
+        name = input()
+        path = os.path.join(self.photos_path,name)
+        if not os.path.exists(path):
+            print("未找到该文件")
         try:
-            self.model = YOLO(self.model_path)
+            self.model = YOLO(path)
             if self.model is None:
                 print("模型打开失败")
             self.model_running = True
@@ -65,6 +70,12 @@ class recognizer:
     def photo_to_display(self): #获取照片，标注后显示到屏幕
         print("从照片到屏幕")
         print("按p结束")
+        print("输入照片名:")
+        name = input()
+        path = os.path.join(self.photos_path,name)
+        if not os.path.exists(path):
+            print("未找到该文件")
+            return
         if not self.model_running:
             if not self.model_init():
                 return
@@ -73,7 +84,7 @@ class recognizer:
                 return
         try:
             while True:
-                results = self.model(self.photos_path,conf=self.conf,iou=self.iou)
+                results = self.model(path,conf=self.conf,iou=self.iou)
                 out_frame = results[0].plot()
                 cv2.imshow("photo",out_frame)
                 key = cv2.waitKey(1) & 0xFF
