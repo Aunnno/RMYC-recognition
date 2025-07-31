@@ -1,34 +1,35 @@
 from ultralytics import YOLO
 import cv2
 import os
-class recognize:
+class recognizer:
     def __init__(self) -> None:
-        self.photos_path = "photos/YOUR_PHOTO"
-        self.model_path = "model/YOUR_MODEL"
+        self.photos_path = "photos/YOUR_PHOTO" #图片路径
+        self.model_path = "model/YOUR_MODEL" #模型路径
         self.cap_running = False
         self.model_running = False
-        self.conf = 0.7
-        self.iou = 0.7
-        if not os.path.exists(self.photos_path):
+        self.conf = 0.7 #置信度阈值
+        self.iou = 0.7 #非极大值抑制
+        if not os.path.exists(self.photos_path): #照片路径检测
             print("照片路径无效")
-        if not os.path.exists(self.model_path):
+        if not os.path.exists(self.model_path): #模型路径检测
             print("模型路径无效")
-    def camera_init(self) -> bool:
+    def camera_init(self) -> bool: #摄像头初始化
         try:
             self.cap = cv2.VideoCapture(0)
             if not self.cap.isOpened():
                 print("未读取到摄像头")
                 return False
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,480)
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,640)
-            self.cap.set(cv2.CAP_PROP_FPS,30.0)
+            #摄像头参数设置
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT,480) #高480
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH,640) #宽640
+            self.cap.set(cv2.CAP_PROP_FPS,30.0) #帧率30
             self.cap_running = True
             print("摄像头打开成功")
             return True
         except Exception as e:
             print(f"摄像头打开出错:{e}")
             return False
-    def model_init(self) -> bool:
+    def model_init(self) -> bool: #模型初始化
         try:
             self.model = YOLO(self.model_path)
             if self.model is None:
@@ -38,7 +39,7 @@ class recognize:
         except Exception as e:
             print(f"打开模型时出现错误:{e}")
             return False
-    def cap_to_display(self):
+    def cap_to_display(self): #从摄像头获取图像，标注后显示到屏幕
         print("从摄像头到屏幕")
         print("按c结束")
         if not self.model_running:
@@ -61,7 +62,7 @@ class recognize:
                     return
         except Exception as e:
             print(f"实时检测错误:{e}")
-    def photo_to_display(self):
+    def photo_to_display(self): #获取照片，标注后显示到屏幕
         print("从照片到屏幕")
         print("按p结束")
         if not self.model_running:
@@ -80,7 +81,7 @@ class recognize:
                     return
         except Exception as e:
             print(f"图片检测错误:{e}")
-    def cap_to_robot(self):
+    def cap_to_robot(self): #从摄像头获取图像并返回中心点给车子
         if not self.model_running:
             if not self.model_init():
                 return
@@ -105,11 +106,11 @@ class recognize:
                     return
         except Exception as e:
             print(f"实时检测错误:{e}")
-    def clean_up(self):
+    def clean_up(self): #手动调用清理的接口
         if self.cap_running and self.cap is not None:
             self.cap_running = False
             self.cap.release()
         self.model_running = False
         cv2.destroyAllWindows()
     def __del__(self):
-        self.clean_up()
+        self.clean_up() #嘻嘻，也直接调用clean_up
