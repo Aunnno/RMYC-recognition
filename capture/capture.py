@@ -1,7 +1,7 @@
 import cv2
 import os
 from datetime import datetime
-
+import time
 class CameraCapture:
     def __init__(self):
         self.camera_index = 0
@@ -106,6 +106,7 @@ class CameraCapture:
                             break
                         else:
                             self.capture_photo
+                            time.sleep(self.delta_t)
                 elif key == ord('q'):
                     print("退出程序")
                     break
