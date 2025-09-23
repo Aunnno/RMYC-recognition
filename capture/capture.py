@@ -9,6 +9,8 @@ class CameraCapture:
         self.is_running = False
         self.is_recording = False
         self.video_writer = None
+        self.is_shooting = False
+        self.delta_t = 0.2
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
     def camera_init(self): #摄像头初始化
@@ -75,7 +77,7 @@ class CameraCapture:
         if self.video_writer is not None and self.is_recording:
             self.video_writer.write(frame)
     def preview(self): #预览
-        print("c拍照,r开始/停止录制,q退出")
+        print("c拍照,v开始/停止连拍,r开始/停止录制,q退出")
         if not self.camera_init():
             return
         try:
@@ -97,6 +99,13 @@ class CameraCapture:
                         self.stop_record()
                     else:
                         self.start_record(frame_width,frame_height,30.0)
+                elif key == ord('v'):
+                    while True:
+                        if self.is_shooting:
+                            self.is_shooting = False
+                            break
+                        else:
+                            self.capture_photo
                 elif key == ord('q'):
                     print("退出程序")
                     break
