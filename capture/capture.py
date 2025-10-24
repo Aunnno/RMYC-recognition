@@ -50,9 +50,9 @@ class CameraCapture:
     def start_record(self,frame_width,frame_height,fps): #开始录像
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"video_{timestamp}.mp4"
+            filename = f"video_{timestamp}.avi"
             filepath = os.path.join(self.save_dir,filename)
-            fourcc = cv2.VideoWriter.fourcc(*'mp4v')
+            fourcc = cv2.VideoWriter.fourcc(*'XVID')
             self.video_writer = cv2.VideoWriter(filepath,fourcc,fps,(frame_width,frame_height))
             if self.video_writer.isOpened():
                 print("录制中")
